@@ -1,0 +1,25 @@
+<!DOCTYPE html> <!-- Используется html 5 версии -->
+<html lang="ru"> <!-- Язык сайта - русский -->
+  <head>
+    {% include 'includes/head.html' %}
+    <title>
+      {% block title %}
+      {% endblock title %}
+    </title>
+  </head>
+  <body>
+    <header>
+      {% load static %}  
+      {% include 'includes/header.html' %}
+    </header>
+    <main>
+      <div class="container py-5">
+        {% block content %}
+        {% endblock %}
+      </div>
+    </main>
+    <footer class="border-top text-center py-3">
+      {% include 'includes/footer.html' %}
+    </footer>
+  </body>
+</html>
