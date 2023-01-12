@@ -7,19 +7,19 @@ from yatube.settings import POST_COUNT
 
 class PostModelTest(TestCase):
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         super().setUpClass()
-        self.user = User.objects.create_user(username='auth')
-        self.group = Group.objects.create(
+        cls.user = User.objects.create_user(username='auth')
+        cls.group = Group.objects.create(
             title='Тестовая группа',
             slug='Тестовый слаг',
             description='Тестовое описание',
         )
-        self.post = Post.objects.create(
-            author=self.user,
+        cls.post = Post.objects.create(
+            author=cls.user,
             text='Тестовый п',
         )
-        self.comment = Comment.objects.create(
+        cls.comment = Comment.objects.create(
             text='Тестовый коммент'
         )
 
