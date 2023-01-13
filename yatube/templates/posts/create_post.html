@@ -10,31 +10,7 @@
           <div class="card-header">
             {% if post %}Редактировать пост{% else %}Добавить пост{% endif %}
           </div>
-          <div class="card-body">
-            <form method="post" enctype="multipart/form-data">
-              {% csrf_token %}
-              {% for field in form %}
-                <div class="form-group row my-3 p-3">
-                  <label for="id_text">
-                    {{ element.help_text}}
-                    <span class="required text-danger" >*</span>
-                  </label>
-                  {{ field }}
-                  <small id="id_text-help" class="form-text text-muted">
-                  {{ field.verbose_name}}
-                  {% if form.subject.errors %}
-                    <ol>
-                      {% for error in form.subject.errors %}
-                        <li><strong>{{ error|escape }}</strong></li>
-                      {% endfor %}
-                    </ol>
-                  {% endif %}
-                </small>
-              </div>
-              {% endfor %}
-              <button type="submit" class="btn btn-primary btn-block">{% if post %}Сохранить{% else %}Добавить запись{% endif %}</button>
-            </form>
-          </div>
+          {% include 'includes/form.html' %}
         </div>
       </div>
     </div>

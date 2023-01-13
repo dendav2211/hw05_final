@@ -1,5 +1,7 @@
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.db import models
+from django.db.models import F, Q
+from django.db.models.constraints import CheckConstraint, UniqueConstraint
 
 User = get_user_model()
 
@@ -114,11 +116,10 @@ class Follow(models.Model):
     )
 
     class Meta:
-        ordering = ('-author',)
-        verbose_name = 'Лента автора'
-        verbose_name_plural = 'Лента авторов'
         constraints = [
-            models.UniqueConstraint(
-                fields=['author', 'user'],
-                name='unique_follow')
+            CheckConstraint(check=~Q(user=F('author')),
+                            name='could_not_follow_itself'),
+            UniqueConstraint(fields=['user', 'author'], name='unique_follower')
         ]
+        verbose_name = 'подписка'
+        verbose_name_plural = 'подписки'

@@ -1,22 +1,14 @@
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import CommentForm, PostForm
 from .models import Follow, Group, Post, User
-from yatube.settings import NUMBER_OF_POSTS
-
-
-def get_paginator(queryset, request):
-    paginator = Paginator(queryset, NUMBER_OF_POSTS)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return page_obj
+from .utils import paginator_utils
 
 
 def index(request):
     context = {
-        'page_obj': get_paginator(
+        'page_obj': paginator_utils(
             Post.objects.select_related('author', 'group'), request)
     }
     return render(request, 'posts/index.html', context)
@@ -27,7 +19,7 @@ def group_posts(request, slug):
     posts = group.posts.select_related('author')
     context = {
         'group': group,
-        'page_obj': get_paginator(posts, request)
+        'page_obj': paginator_utils(posts, request)
     }
     return render(request, 'posts/group_list.html', context)
 
@@ -39,7 +31,7 @@ def profile(request, username):
                                            author=author).exists())
     context = {
         'author': author,
-        'page_obj': get_paginator(
+        'page_obj': paginator_utils(
             author.posts.select_related('author'), request),
         'following': following
     }
@@ -98,7 +90,7 @@ def add_comment(request, post_id):
 
 @login_required
 def follow_index(request):
-    context = {'page_obj': get_paginator(Post.objects.filter(
+    context = {'page_obj': paginator_utils(Post.objects.filter(
         author__following__user=request.user), request)}
     return render(request, 'posts/follow.html', context)
 
@@ -114,6 +106,6 @@ def profile_follow(request, username):
 
 @login_required
 def profile_unfollow(request, username):
-    user = request.user
-    Follow.objects.filter(user=user, author__username=username).delete()
+    Follow.objects.filter(
+        user=request.user, author__username=username).delete()
     return redirect("posts:profile", username=username)

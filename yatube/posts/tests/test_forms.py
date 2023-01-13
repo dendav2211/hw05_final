@@ -1,13 +1,12 @@
 import shutil
 import tempfile
-
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import Client, override_settings, TestCase
-from django.urls import reverse
-
 from http import HTTPStatus
 
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import Client, TestCase, override_settings
+from django.urls import reverse
 from yatube import settings
+
 from ..models import Comment, Group, Post, User
 
 FINAL_DIFFERENCE = 1

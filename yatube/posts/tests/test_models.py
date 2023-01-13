@@ -1,8 +1,7 @@
 from django.test import TestCase
+from yatube.settings import POST_COUNT
 
 from ..models import Comment, Group, Post, User
-
-from yatube.settings import POST_COUNT
 
 
 class PostModelTest(TestCase):
@@ -20,78 +19,61 @@ class PostModelTest(TestCase):
             text='Тестовый п',
         )
         cls.comment = Comment.objects.create(
-            text='Тестовый коммент'
+            text='Тестовый коммен'
         )
 
     def test_post_have_correct_object_names(self):
         """Проверяем, что у модели post корректно работает __str__."""
-        self.assertEqual(self.post.text[:POST_COUNT], str(self.post))
-
-    def test_group_have_correct_object_names(self):
-        """Проверяем, что у модели group корректно работает __str__."""
-        self.assertEqual(self.group.title, str(self.group))
-
-    def test_title_post(self):
-        """Проверка заполнения verbose_name в post"""
-        field_verboses = {'text': 'Текст поста',
-                          'pub_date': 'Дата публикации',
-                          'group': 'Группа',
-                          'author': 'Автор',
-                          'image': 'Картинка'
-                          }
-        for field, expected_value in field_verboses.items():
+        test_dict = {
+            self.post: ' '.join(
+                self.post.text.split()[:POST_COUNT]),
+            self.group: self.group.title,
+            self.comment: ' '.join(
+                self.comment.text.split()[:POST_COUNT])
+        }
+        for field, expected_value in test_dict.items():
             with self.subTest(field=field):
                 self.assertEqual(
-                    Post._meta.get_field(field).verbose_name,
-                    expected_value)
+                    str(field), expected_value, 'oops!')
 
-    def test_title_help_text_post(self):
-        """Проверка заполнения help_text в post"""
-        field_help_texts = {'text': 'Введите текст поста',
-                            'group': 'Группа, в которой будет этот пост'
-                            }
-        for field, expected_value in field_help_texts.items():
-            with self.subTest(field=field):
-                self.assertEqual(
-                    Post._meta.get_field(field).help_text,
-                    expected_value)
+    def test_verbose_name(self):
+        """verbose_name в полях совпадает с ожидаемым."""
+        DICT = {
+            Post: {
+                'text': 'Текст поста',
+                'pub_date': 'Дата публикации',
+                'author': 'Автор',
+                'group': 'Группа',
+                'image': 'Картинка',
+            },
+            Comment: {
+                'text': 'Текст комментария',
+                'author': 'Автор',
+                'post': 'Текст поста',
+                'pub_date': 'Дата публикации'
+            },
+        }
+        for model, dict in DICT.items():
+            for field, expected_value in dict.items():
+                with self.subTest(field=field):
+                    self.assertEqual(
+                        model._meta.get_field(field).verbose_name,
+                        expected_value)
 
-    def test_title_label_group(self):
-        """Проверка заполнения verbose_name в group"""
-        field_verboses = {'title': 'Название группы',
-                          'slug': 'Адрес группы',
-                          'description': 'Описание группы'
-                          }
-        for field, expected_value in field_verboses.items():
-            with self.subTest(field=field):
-                self.assertEqual(
-                    Group._meta.get_field(field).verbose_name,
-                    expected_value)
-
-    def test_title_help_text_group(self):
-        """Проверка заполнения help_text в group"""
-        field_help_texts = {'title': 'Введите название группы',
-                            'slug': 'Желаемый адрес группы',
-                            'description': 'Введите описание группы'
-                            }
-        for field, expected_value in field_help_texts.items():
-            with self.subTest(field=field):
-                self.assertEqual(
-                    Group._meta.get_field(field).help_text,
-                    expected_value)
-
-    def test_title_comment(self):
-        """Проверка заполнения verbose_name в comment"""
-        field_verboses = {'text': 'Текст комментария',
-                          'pub_date': 'Дата публикации'
-                          }
-        for field, expected_value in field_verboses.items():
-            with self.subTest(field=field):
-                self.assertEqual(
-                    Comment._meta.get_field(field).verbose_name,
-                    expected_value)
-
-    def test_help_text_comment(self):
-        """Проверка заполнения help_text в comment"""
-        self.assertEqual(Comment._meta.get_field('text').help_text,
-                         'Введите текст комментария')
+    def test_help_text(self):
+        """help_text в полях совпадает с ожидаемым."""
+        DICT = {
+            Post: {
+                'text': 'Введите текст поста',
+                'group': 'Группа, в которой будет этот пост',
+            },
+            Comment: {
+                'text': 'Введите текст комментария'
+            }
+        }
+        for model, field_help_texts in DICT.items():
+            for field, expected_value in field_help_texts.items():
+                with self.subTest(field=field):
+                    self.assertEqual(
+                        model._meta.get_field(field).help_text,
+                        expected_value)
