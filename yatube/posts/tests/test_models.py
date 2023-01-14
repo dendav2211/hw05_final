@@ -54,7 +54,8 @@ class PostModelTest(TestCase):
             },
             Group: {
                 'title': 'Название группы',
-                'description': 'Описание группы'
+                'description': 'Описание группы',
+                'slug': 'Адрес группы'
             },
         }
         for model, dict in DICT.items():
@@ -76,7 +77,8 @@ class PostModelTest(TestCase):
             },
             Group: {
                 'title': 'Введите название группы',
-                'description': 'Введите описание группы'
+                'description': 'Введите описание группы',
+                'slug': 'Желаемый адрес группы'
             },
         }
         for model, field_help_texts in DICT.items():
