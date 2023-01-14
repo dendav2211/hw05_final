@@ -39,7 +39,7 @@ class TaskURLTests(TestCase):
         self.EDIT_POST_URLS = f'/auth/login/?next=/posts/{self.post.id}/edit/'
         self.COMMENT_URL = f'/posts/{self.post.id}/comment/'
         self.FOLLOWING_URL = f'/profile/{self.user.username}/follow/'
-        self.UN_FOLLOWING_URL = f'/profile/{self.user.username}/unfollow/'
+        self.UFOLLOWING_URL = f'/profile/{self.user.username}/unfollow/'
         self.guest_client = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
@@ -59,7 +59,7 @@ class TaskURLTests(TestCase):
             [self.authorized_client, FOLLOW_URL, HTTPStatus.OK],
             [self.authorized_client, self.COMMENT_URL, HTTPStatus.FOUND],
             [self.authorized_client, self.FOLLOWING_URL, HTTPStatus.FOUND],
-            [self.authorized_client, self.UN_FOLLOWING_URL, HTTPStatus.FOUND]
+            [self.authorized_client, self.UFOLLOWING_URL, HTTPStatus.NOT_FOUND]
         ]
         for dicts in list_for_test:
             with self.subTest():

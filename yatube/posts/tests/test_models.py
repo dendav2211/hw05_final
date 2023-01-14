@@ -52,6 +52,10 @@ class PostModelTest(TestCase):
                 'post': 'Текст поста',
                 'pub_date': 'Дата публикации'
             },
+            Group: {
+                'title': 'Название группы',
+                'description': 'Описание группы'
+            },
         }
         for model, dict in DICT.items():
             for field, expected_value in dict.items():
@@ -69,7 +73,11 @@ class PostModelTest(TestCase):
             },
             Comment: {
                 'text': 'Введите текст комментария'
-            }
+            },
+            Group: {
+                'title': 'Введите название группы',
+                'description': 'Введите описание группы'
+            },
         }
         for model, field_help_texts in DICT.items():
             for field, expected_value in field_help_texts.items():
